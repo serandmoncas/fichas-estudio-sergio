@@ -79,6 +79,21 @@ final class ImportadorMazoTests: XCTestCase {
         ])
     }
 
+    func testUnaFuenteSinDOIMuestraSuURL() throws {
+        let conURL = Data("""
+        { "formato": "fichas-mazo", "version": 1, "nombre": "x",
+          "categorias": [{ "id": "c1", "nombre": "Claude" }],
+          "fichas": [{ "id": "f1", "pregunta": "p", "respuesta": "r", "categoria": "c1",
+                       "tipo_calificacion": "escala_1_5", "cita": { "fuente": "d" } }],
+          "fuentes": [{ "id": "d", "titulo": "Claude Code overview", "autor": "Anthropic",
+                        "url": "https://docs.claude.com/en/docs/claude-code/overview" }] }
+        """.utf8)
+        _ = try ImportadorMazo.importar(conURL, en: contexto)
+        let ficha = try XCTUnwrap(contexto.fetch(FetchDescriptor<Ficha>()).first)
+        XCTAssertEqual(ficha.camposAdicionales.last,
+                       CampoAdicional(nombre: "Enlace", texto: "https://docs.claude.com/en/docs/claude-code/overview"))
+    }
+
     func testImportarDosVecesNoDuplica() throws {
         _ = try ImportadorMazo.importar(mazo, en: contexto)
         let segunda = try ImportadorMazo.importar(mazo, en: contexto)

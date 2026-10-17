@@ -59,6 +59,7 @@ public enum ImportadorMazo {
         let anio: Int?
         let revista: String?
         let doi: String?
+        let url: String?
     }
 
     // MARK: - Importar
@@ -118,8 +119,8 @@ public enum ImportadorMazo {
             var campos = f.campos_adicionales ?? []
             if let cita = f.cita, let fuente = fuentes[cita.fuente] {
                 campos.append(CampoAdicional(nombre: "Fuente", texto: texto(de: fuente, ubicacion: cita.ubicacion)))
-                if let doi = fuente.doi {
-                    campos.append(CampoAdicional(nombre: "Enlace", texto: "https://doi.org/\(doi)"))
+                if let enlace = fuente.doi.map({ "https://doi.org/\($0)" }) ?? fuente.url {
+                    campos.append(CampoAdicional(nombre: "Enlace", texto: enlace))
                 }
             }
             let ficha = try Ficha(
