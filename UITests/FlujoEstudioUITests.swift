@@ -9,6 +9,14 @@ final class FlujoEstudioUITests: XCTestCase {
         continueAfterFailure = false
         app = XCUIApplication()
         app.launchArguments = ["-pruebas-ui"]
+        // Respaldo por si el sistema muestra algo encima (por ejemplo, el tutorial del teclado en un simulador nuevo).
+        addUIInterruptionMonitor(withDescription: "Avisos del sistema") { alerta in
+            for boton in ["Continue", "Continuar", "OK", "Aceptar", "Not Now", "Ahora no"] where alerta.buttons[boton].exists {
+                alerta.buttons[boton].tap()
+                return true
+            }
+            return false
+        }
         app.launch()
     }
 
@@ -18,7 +26,9 @@ final class FlujoEstudioUITests: XCTestCase {
         abrir("Ciencias")
         abrir("Fichas")
         crearFicha(pregunta: "¿Cuántas patas tiene una araña?", respuesta: "Ocho")
-        volverAlInicio()
+        volver(a: "Ciencias")
+        volver(a: "Categorías")
+        volver(a: "Fichas")
 
         abrir("Elegir qué estudiar")
         app.switches["Ciencias"].firstMatch.switches.firstMatch.tap()
@@ -32,7 +42,8 @@ final class FlujoEstudioUITests: XCTestCase {
         esperar(app.staticTexts["Terminaste por hoy"])
         XCTAssertTrue(conTexto("1 de 10 fichas").exists)
         XCTAssertEqual(valor(de: "Bien"), "1")
-        volverAlInicio()
+        volver(a: "Nueva sesión")
+        volver(a: "Fichas")
 
         abrir("Historial")
         esperar(conTexto("1 fichas"))
@@ -44,8 +55,8 @@ final class FlujoEstudioUITests: XCTestCase {
         abrir("Historia")
         abrir("Fichas")
         crearFicha(pregunta: "¿Quién escribió el Quijote?", respuesta: "Cervantes")
-        volver()
-        volver()
+        volver(a: "Historia")
+        volver(a: "Categorías")
 
         fila("Historia").swipeLeft()
         app.buttons["Eliminar"].tap()
@@ -95,15 +106,12 @@ final class FlujoEstudioUITests: XCTestCase {
         app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", texto)).firstMatch
     }
 
-    private func volver() {
-        app.navigationBars.buttons["BackButton"].tap()
-    }
-
-    private func volverAlInicio() {
-        // La lista de fichas también se titula "Fichas", así que se vuelve hasta que no haya botón de atrás.
-        while app.navigationBars.buttons["BackButton"].exists {
-            volver()
-        }
+    /// Toca el botón de atrás, que lleva el título de la pantalla anterior.
+    /// (El identificador "BackButton" existe en iOS 26 pero no en iOS 18.)
+    private func volver(a titulo: String) {
+        let boton = app.navigationBars.buttons[titulo].firstMatch
+        esperar(boton)
+        boton.tap()
     }
 
     /// El valor de una fila `LabeledContent`, que aparece como "Etiqueta, valor".

@@ -44,4 +44,15 @@ jobs:
         run: |
           # El primer iPhone disponible, para no depender de un nombre fijo de simulador.
           SIMULADOR=$(xcrun simctl list devices available -j | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; print(next(x['udid'] for k,v in d.items() if 'iOS' in k for x in v if x['name'].startswith('iPhone')))")
-          xcodebuild test -project Fichas.xcodeproj -scheme Fichas -destination "id=$SIMULADOR" CODE_SIGNING_ALLOWED=NO
+          # Con teclado físico no aparece el teclado en pantalla ni su tutorial, que interrumpe las pruebas.
+          defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool true
+          xcrun simctl boot "$SIMULADOR"
+          xcrun simctl bootstatus "$SIMULADOR"
+          xcodebuild test -project Fichas.xcodeproj -scheme Fichas -destination "id=$SIMULADOR" \
+            -resultBundlePath PruebasUI.xcresult CODE_SIGNING_ALLOWED=NO
+      - name: Guardar resultados de las pruebas de interfaz
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: PruebasUI.xcresult
+          path: PruebasUI.xcresult
