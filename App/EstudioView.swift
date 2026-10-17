@@ -22,7 +22,7 @@ struct EstudioView: View {
                     .id(indice)
                     .task(id: indice) { await esperarLimite(de: ficha) }
             } else {
-                ResumenView(sesion: enCurso.sesion)
+                ResumenView(sesion: enCurso.sesion, recienTerminada: true)
             }
         }
         .navigationTitle(ficha == nil ? "Resumen" : "\(indice + 1) de \(enCurso.fichas.count)")

@@ -26,6 +26,11 @@ struct InicioView: View {
             .navigationTitle("Fichas")
             .toolbar {
                 NavigationLink {
+                    HistorialView()
+                } label: {
+                    Label("Historial", systemImage: "clock")
+                }
+                NavigationLink {
                     CategoriasView()
                 } label: {
                     Label("Categorías", systemImage: "folder")
