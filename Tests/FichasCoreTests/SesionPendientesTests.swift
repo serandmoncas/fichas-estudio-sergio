@@ -26,15 +26,11 @@ final class SesionPendientesTests: XCTestCase {
         for caso in archivo.casos {
             let e = caso.entrada
             let fichas = e.fichas.map { FichaProgramada(id: $0.id, proximoRepaso: $0.proximo_repaso) }
-            do {
-                let obtenido = try seleccionarPendientes(hoy: e.hoy, fichas: fichas, limiteNuevas: e.limite_nuevas)
-                // El orden de los repasos no forma parte del contrato.
-                XCTAssertEqual(Set(obtenido.repasos), Set(caso.esperado.repasos), "\(caso.id): \(caso.descripcion)")
-                XCTAssertEqual(obtenido.repasos.count, caso.esperado.repasos.count, "\(caso.id): repasos duplicados")
-                XCTAssertEqual(obtenido.cantidadNuevas, caso.esperado.cantidad_nuevas, "\(caso.id): \(caso.descripcion)")
-            } catch {
-                XCTFail("\(caso.id): \(caso.descripcion) → \(error)")
-            }
+            let obtenido = seleccionarPendientes(hoy: e.hoy, fichas: fichas, limiteNuevas: e.limite_nuevas)
+            // El orden de los repasos no forma parte del contrato.
+            XCTAssertEqual(Set(obtenido.repasos), Set(caso.esperado.repasos), "\(caso.id): \(caso.descripcion)")
+            XCTAssertEqual(obtenido.repasos.count, caso.esperado.repasos.count, "\(caso.id): cantidad de repasos distinta")
+            XCTAssertEqual(obtenido.cantidadNuevas, caso.esperado.cantidad_nuevas, "\(caso.id): \(caso.descripcion)")
         }
     }
 }

@@ -38,7 +38,7 @@ Si ya clonaste sin `--recurse-submodules`: `git submodule update --init`.
 
 ## TDD
 
-Las funciones de `FichasCore` empiezan lanzando `noImplementado`, así que hoy las pruebas fallan a propósito. El ciclo es:
+Cada función de `FichasCore` empieza lanzando `noImplementado`, así que sus pruebas fallan a propósito hasta que se implementa. El ciclo es:
 
 1. Elegir un caso que falla (por ejemplo `CAL-001`).
 2. Escribir el código mínimo para que pase.
@@ -56,8 +56,8 @@ git submodule update --remote especificacion
 
 | Área | Casos | Estado |
 |---|---|---|
-| Traducción de calificaciones | CAL-001 a CAL-009 | Por implementar |
-| Sesión de pendientes | SES-001 a SES-006 | Por implementar |
+| Traducción de calificaciones | CAL-001 a CAL-009 | Implementado (casos en propuesta, issue #2) |
+| Sesión de pendientes | SES-001 a SES-006 | Implementado (casos en propuesta, issue #3) |
 | Algoritmo FSRS | Pendiente de la decisión del issue #1 | Sin empezar |
 | Persistencia (SwiftData) | | Sin empezar |
 | Sincronización (iCloud) | | Para después |
