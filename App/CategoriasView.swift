@@ -13,7 +13,9 @@ struct CategoriasView: View {
     var body: some View {
         List {
             ForEach(categorias) { categoria in
-                NavigationLink(value: categoria) {
+                NavigationLink {
+                    CategoriaView(categoria: categoria)
+                } label: {
                     LabeledContent(categoria.nombre, value: "\(categoria.fichas.count)")
                 }
                 .contextMenu {
@@ -33,7 +35,6 @@ struct CategoriasView: View {
             }
         }
         .navigationTitle("Categorías")
-        .navigationDestination(for: Categoria.self) { CategoriaView(categoria: $0) }
         .toolbar {
             Button("Nueva categoría", systemImage: "plus") { editando = .nueva }
         }
