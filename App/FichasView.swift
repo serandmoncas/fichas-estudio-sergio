@@ -7,10 +7,14 @@ struct FichasView: View {
     @Environment(\.modelContext) private var contexto
     let categoria: Categoria
 
+    /// `@Query` y no `categoria.fichas`: la relación no siempre avisa a la vista cuando se agrega
+    /// una ficha desde el formulario, y la lista quedaba vacía (lo detectó la prueba de interfaz).
+    @Query(sort: \Ficha.pregunta) private var todas: [Ficha]
+
     @State private var formulario: FichaFormView.Modo?
 
     private var fichas: [Ficha] {
-        categoria.fichas.sorted { $0.pregunta.localizedStandardCompare($1.pregunta) == .orderedAscending }
+        todas.filter { $0.categoria == categoria }
     }
 
     var body: some View {
