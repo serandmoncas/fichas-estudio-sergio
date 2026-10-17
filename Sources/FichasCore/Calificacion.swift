@@ -16,7 +16,7 @@ public enum TipoCalificacion: String, Codable, Equatable, Sendable {
 }
 
 /// La calificación tal como la da el estudiante: un número de 1 a 5, o pasa / no pasa.
-public enum CalificacionOriginal: Equatable, Sendable {
+public enum CalificacionOriginal: Hashable, Sendable {
     case escala(Int)
     case pasa
     case noPasa

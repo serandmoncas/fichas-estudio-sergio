@@ -29,6 +29,9 @@ public final class Ficha {
     /// `con_tiempo` / `tiempo_maximo_segundos` del modelo de datos, para que no
     /// pueda existir una ficha con tiempo y sin tiempo máximo.
     public var tiempoMaximoSegundos: Int?
+    /// Al borrar la ficha, sus respuestas quedan en el registro de la sesión (REQ-030).
+    @Relationship(deleteRule: .nullify, inverse: \Respuesta.ficha)
+    public var respuestas: [Respuesta] = []
 
     public var conTiempo: Bool { tiempoMaximoSegundos != nil }
 
