@@ -9,9 +9,12 @@ Implementación en SwiftUI de la [aplicación de fichas de estudio](https://gith
 
 | Ruta | Contenido |
 |---|---|
-| `Sources/FichasCore/` | Lógica de dominio: calificación, sesiones, repetición. Sin SwiftUI |
+| `Sources/FichasCore/` | Lógica de dominio: calificación, sesiones, selección, resumen. Sin SwiftUI ni frameworks solo de Apple |
+| `Sources/FichasDatos/` | Persistencia con SwiftData (en Linux compila vacío) y datos de ejemplo |
 | `Tests/FichasCoreTests/` | Pruebas que recorren los casos compartidos de `especificacion/pruebas/casos/` |
+| `Tests/FichasDatosTests/` | Pruebas de los modelos y sus reglas (eliminar, subcategorías) |
 | `App/` | Interfaz SwiftUI multiplataforma |
+| `UITests/` | Pruebas de interfaz del flujo completo en el simulador de iOS |
 | `project.yml` | Definición del proyecto de Xcode (XcodeGen) |
 | `especificacion/` | Submódulo con la especificación y los casos de prueba |
 
@@ -58,9 +61,19 @@ git submodule update --remote especificacion
 |---|---|---|
 | Traducción de calificaciones | CAL-001 a CAL-009 | Implementado (casos en propuesta, issue #2) |
 | Sesión de pendientes | SES-001 a SES-006 | Implementado (casos en propuesta, issue #3) |
-| Algoritmo FSRS | Pendiente de la decisión del issue #1 | Sin empezar |
-| Persistencia (SwiftData) | | Sin empezar |
+| Selección de sesión manual | Casos SEL propuestos en la especificación (#22) | Implementado |
+| Resumen de sesión | Pregunta abierta 16 | Implementado (lo mínimo) |
+| Algoritmo FSRS | REP-001 y REP-002, propuestos (#21) | En el PR #6, en borrador hasta que se decida el issue #1 |
+| Persistencia (SwiftData) | | Implementado. Eliminar una categoría con fichas se bloquea (pregunta abierta 17) |
+| Pantallas mínimas | `04-interfaz.md` | Las seis, con pruebas de interfaz |
 | Sincronización (iCloud) | | Para después |
+
+## Datos de ejemplo
+
+Para probar a mano, abre la app con el argumento `-datos-ejemplo` (solo en DEBUG). Carga 3 categorías, 16 fichas y 2 sesiones, si todavía no hay categorías.
+
+- Xcode: Product → Scheme → Edit Scheme → Run → Arguments.
+- Terminal: `xcrun devicectl device process launch --device <id> co.expia.Fichas -- -datos-ejemplo`.
 
 ## CI
 
