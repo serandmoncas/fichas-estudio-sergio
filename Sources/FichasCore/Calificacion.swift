@@ -50,6 +50,6 @@ public func traducirCalificacion(
     case .escala:
         throw ErrorCalificacion.calificacionInvalida
     }
-    // REQ-017: si se agotó el tiempo cuenta como Otra vez, sin importar la autocalificación.
+    // CAL-008: si se agotó el tiempo cuenta como Otra vez, sin importar la autocalificación.
     return tiempoAgotado ? .otraVez : traducida
 }
