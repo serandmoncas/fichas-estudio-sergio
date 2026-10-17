@@ -22,11 +22,10 @@ struct EstudioView: View {
                     .id(indice)
                     .task(id: indice) { await esperarLimite(de: ficha) }
             } else {
-                terminada
+                ResumenView(sesion: enCurso.sesion)
             }
         }
-        .padding()
-        .navigationTitle(ficha == nil ? "Sesión terminada" : "\(indice + 1) de \(enCurso.fichas.count)")
+        .navigationTitle(ficha == nil ? "Resumen" : "\(indice + 1) de \(enCurso.fichas.count)")
     }
 
     private func tarjeta(_ ficha: Ficha) -> some View {
@@ -65,6 +64,7 @@ struct EstudioView: View {
             }
         }
         .frame(maxWidth: 600)
+        .padding()
     }
 
     @ViewBuilder
@@ -87,11 +87,6 @@ struct EstudioView: View {
                 }
             }
         }
-    }
-
-    private var terminada: some View {
-        ContentUnavailableView("Terminaste por hoy", systemImage: "checkmark.circle",
-                               description: Text("Respondiste \(enCurso.sesion.respuestas.count) fichas."))
     }
 
     /// Si la ficha tiene límite, al cumplirse se revela la respuesta y la respuesta cuenta como tiempo agotado.
