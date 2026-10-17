@@ -4,7 +4,7 @@ import SwiftData
 
 public enum Almacen {
     /// Todos los modelos que guarda la app.
-    public static let esquema = Schema([Categoria.self, Subcategoria.self])
+    public static let esquema = Schema([Categoria.self, Subcategoria.self, Ficha.self])
 
     /// Contenedor que vive solo en memoria, para pruebas y vistas previas.
     public static func contenedorEnMemoria() throws -> ModelContainer {
