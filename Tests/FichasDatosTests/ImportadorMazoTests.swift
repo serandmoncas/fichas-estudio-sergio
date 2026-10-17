@@ -62,6 +62,23 @@ final class ImportadorMazoTests: XCTestCase {
         XCTAssertEqual(fichas.first { $0.pregunta.contains("sueño") }?.tipoCalificacion, .pasaNoPasa)
     }
 
+    func testLaFuenteIncluyeRevistaYEnlaceSiLosHay() throws {
+        let conRevista = Data("""
+        { "formato": "fichas-mazo", "version": 1, "nombre": "x",
+          "categorias": [{ "id": "c1", "nombre": "Memoria" }],
+          "fichas": [{ "id": "f1", "pregunta": "p", "respuesta": "r", "categoria": "c1",
+                       "tipo_calificacion": "escala_1_5", "cita": { "fuente": "m" } }],
+          "fuentes": [{ "id": "m", "titulo": "The magical number seven", "autor": "Miller", "anio": 1956,
+                        "revista": "Psychological Review", "doi": "10.1037/h0043158" }] }
+        """.utf8)
+        _ = try ImportadorMazo.importar(conRevista, en: contexto)
+        let ficha = try XCTUnwrap(contexto.fetch(FetchDescriptor<Ficha>()).first)
+        XCTAssertEqual(ficha.camposAdicionales, [
+            CampoAdicional(nombre: "Fuente", texto: "Miller (1956). The magical number seven. Psychological Review"),
+            CampoAdicional(nombre: "Enlace", texto: "https://doi.org/10.1037/h0043158"),
+        ])
+    }
+
     func testImportarDosVecesNoDuplica() throws {
         _ = try ImportadorMazo.importar(mazo, en: contexto)
         let segunda = try ImportadorMazo.importar(mazo, en: contexto)
