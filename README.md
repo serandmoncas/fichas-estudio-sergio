@@ -66,6 +66,7 @@ git submodule update --remote especificacion
 | Algoritmo FSRS | REP-001 y REP-002, propuestos (#21) | En el PR #6, en borrador hasta que se decida el issue #1 |
 | Persistencia (SwiftData) | | Implementado. Eliminar una categoría con fichas se bloquea (pregunta abierta 17) |
 | Pantallas mínimas | `04-interfaz.md` | Las seis, con pruebas de interfaz |
+| Importar mazos | Formato propuesto en el issue #6 | Prototipo, solo en DEBUG |
 | Sincronización (iCloud) | | Para después |
 
 ## Datos de ejemplo
@@ -74,6 +75,15 @@ Para probar a mano, abre la app con el argumento `-datos-ejemplo` (solo en DEBUG
 
 - Xcode: Product → Scheme → Edit Scheme → Run → Arguments.
 - Terminal: `xcrun devicectl device process launch --device <id> co.expia.Fichas -- -datos-ejemplo`.
+
+## Importar un mazo
+
+Prototipo del formato propuesto en el issue #6 de la especificación; puede cambiar. Solo en DEBUG.
+
+1. Copia el archivo a la carpeta de la app: `xcrun devicectl device copy to --device <id> --domain-type appDataContainer --domain-identifier co.expia.Fichas --source mazo.json --destination Documents/mazo.json`.
+2. Abre la app con el argumento: `xcrun devicectl device process launch --device <id> co.expia.Fichas -- -importar-mazo Documents/mazo.json`.
+
+Las categorías y subcategorías con el mismo nombre se reutilizan, y una ficha con la misma pregunta en la misma categoría no se repite, así que importar dos veces no duplica nada. Si el archivo tiene un error, no se importa nada. La cita de cada ficha queda como campo adicional "Fuente", con su "Enlace".
 
 ## CI
 
