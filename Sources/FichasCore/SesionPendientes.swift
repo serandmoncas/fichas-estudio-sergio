@@ -42,6 +42,11 @@ public func seleccionarPendientes(
     fichas: [FichaProgramada],
     limiteNuevas: Int
 ) throws -> SeleccionSesion {
-    // TDD: las pruebas de sesion-pendientes.json fallan hasta que esto se implemente.
-    throw ErrorSesion.noImplementado
+    // AAAA-MM-DD ordena igual como texto que como fecha.
+    let repasos = fichas.filter { ficha in
+        guard let proximo = ficha.proximoRepaso else { return false }
+        return proximo <= hoy
+    }.map(\.id)
+    let nuevas = fichas.filter { $0.proximoRepaso == nil }.count
+    return SeleccionSesion(repasos: repasos, cantidadNuevas: min(nuevas, limiteNuevas))
 }
