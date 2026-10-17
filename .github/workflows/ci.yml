@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  dominio:
+    name: Dominio (FichasCore)
+    runs-on: ubuntu-latest
+    container: swift:6.0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Compilar
+        run: swift build --build-tests
+      - name: Pruebas compartidas
+        run: swift test
+
+  app:
+    name: App (iOS y macOS)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Generar proyecto
+        run: |
+          brew install xcodegen
+          xcodegen
+      - name: Compilar para macOS
+        run: xcodebuild -project Fichas.xcodeproj -scheme Fichas -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build
+      - name: Compilar para iOS
+        run: xcodebuild -project Fichas.xcodeproj -scheme Fichas -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build

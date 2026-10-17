@@ -1,0 +1,3 @@
+[submodule "especificacion"]
+	path = especificacion
+	url = https://github.com/Exp-IA/fichas-estudio-specs.git

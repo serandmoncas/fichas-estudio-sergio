@@ -1,0 +1,13 @@
+# Xcode (el proyecto se genera con xcodegen desde project.yml)
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+App/Info.plist
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# macOS
+.DS_Store
