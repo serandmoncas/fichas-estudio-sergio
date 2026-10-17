@@ -5,4 +5,6 @@ public enum ErrorDatos: Error, Equatable {
     case categoriaConFichas
     /// La subcategoría no pertenece a la categoría de la ficha (REQ-014).
     case subcategoriaDeOtraCategoria
+    /// El archivo de mazo no tiene el formato esperado, o se contradice.
+    case mazoInvalido(String)
 }
