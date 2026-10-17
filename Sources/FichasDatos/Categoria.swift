@@ -29,11 +29,6 @@ public final class Subcategoria {
     }
 }
 
-public enum ErrorDatos: Error, Equatable {
-    /// La categoría tiene fichas: hay que moverlas o borrarlas antes de eliminarla.
-    case categoriaConFichas
-}
-
 extension ModelContext {
     /// Elimina la categoría con sus subcategorías. Falla si todavía tiene fichas.
     public func eliminar(_ categoria: Categoria) throws {
