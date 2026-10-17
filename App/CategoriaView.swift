@@ -30,7 +30,11 @@ struct CategoriaView: View {
                 Button("Agregar subcategoría", systemImage: "plus") { editando = .nueva }
             }
             Section {
-                LabeledContent("Fichas", value: "\(categoria.fichas.count)")
+                NavigationLink {
+                    FichasView(categoria: categoria)
+                } label: {
+                    LabeledContent("Fichas", value: "\(categoria.fichas.count)")
+                }
             } footer: {
                 // Al eliminar una subcategoría sus fichas no se pierden (ver EliminarCategoriaTests).
                 Text("Si eliminas una subcategoría, sus fichas quedan en “\(categoria.nombre)”.")
