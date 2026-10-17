@@ -80,6 +80,10 @@ Para probar a mano, abre la app con el argumento `-datos-ejemplo` (solo en DEBUG
 
 Prototipo del formato propuesto en el issue #6 de la especificación; puede cambiar. Solo en DEBUG.
 
+Desde el iPhone: en **Categorías**, toca **Importar mazo** (↓) y elige el `.json` en Archivos o iCloud Drive. Un aviso dice cuántas fichas y categorías se agregaron.
+
+Desde el Mac, sin tocar el iPhone:
+
 1. Copia el archivo a la carpeta de la app: `xcrun devicectl device copy to --device <id> --domain-type appDataContainer --domain-identifier co.expia.Fichas --source mazo.json --destination Documents/mazo.json`.
 2. Abre la app con el argumento: `xcrun devicectl device process launch --device <id> co.expia.Fichas -- -importar-mazo Documents/mazo.json`.
 
