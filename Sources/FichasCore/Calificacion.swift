@@ -25,8 +25,6 @@ public enum CalificacionOriginal: Equatable, Sendable {
 public enum ErrorCalificacion: Error, Equatable {
     /// La calificación no corresponde al tipo de calificación de la ficha, o está fuera de rango.
     case calificacionInvalida
-    /// Marca de TDD: la función todavía no está implementada.
-    case noImplementado
 }
 
 /// Traduce la autocalificación del estudiante a una calificación de FSRS.
@@ -41,13 +39,17 @@ public func traducirCalificacion(
     calificacion: CalificacionOriginal,
     tiempoAgotado: Bool
 ) throws -> CalificacionFSRS {
+    let traducida: CalificacionFSRS
     switch calificacion {
-    case .escala(1): return .otraVez
-    case .escala(2): return .dificil
-    case .escala(3), .escala(4): return .bien
-    case .escala(5): return .facil
-    default: break
+    case .escala(1): traducida = .otraVez
+    case .escala(2): traducida = .dificil
+    case .escala(3), .escala(4): traducida = .bien
+    case .escala(5): traducida = .facil
+    case .noPasa: traducida = .otraVez
+    case .pasa: traducida = .bien
+    case .escala:
+        throw ErrorCalificacion.calificacionInvalida
     }
-    // TDD: el resto de casos de calificacion.json fallan hasta que se implementen.
-    throw ErrorCalificacion.noImplementado
+    // REQ-017: si se agotó el tiempo cuenta como Otra vez, sin importar la autocalificación.
+    return tiempoAgotado ? .otraVez : traducida
 }
