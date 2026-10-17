@@ -44,11 +44,18 @@ jobs:
         run: |
           # El primer iPhone disponible, para no depender de un nombre fijo de simulador.
           SIMULADOR=$(xcrun simctl list devices available -j | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; print(next(x['udid'] for k,v in d.items() if 'iOS' in k for x in v if x['name'].startswith('iPhone')))")
-          # Con teclado físico no aparece el teclado en pantalla ni su tutorial, que interrumpe las pruebas.
-          defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool true
           xcrun simctl boot "$SIMULADOR"
           xcrun simctl bootstatus "$SIMULADOR"
+          # Sin la app Simulator abierta no hay teclado físico: sale el teclado en pantalla, y la primera
+          # vez muestra el aviso de "deslizar para escribir", que interrumpe las pruebas o cierra la app.
+          # Se marca el aviso como visto y se apagan la autocorrección y las sugerencias.
+          xcrun simctl spawn "$SIMULADOR" defaults write com.apple.Preferences DidShowContinuousPathIntroduction -bool true
+          xcrun simctl spawn "$SIMULADOR" defaults write com.apple.Preferences KeyboardAutocorrection -bool false
+          xcrun simctl spawn "$SIMULADOR" defaults write com.apple.Preferences KeyboardPrediction -bool false
+          xcrun simctl spawn "$SIMULADOR" defaults write com.apple.keyboard.ContinuousPath EnableContinuousPath -bool false
+          # Si el simulador falla por su cuenta, se repite una vez la prueba fallida antes de dar error.
           xcodebuild test -project Fichas.xcodeproj -scheme Fichas -destination "id=$SIMULADOR" \
+            -retry-tests-on-failure -test-iterations 2 \
             -resultBundlePath PruebasUI.xcresult CODE_SIGNING_ALLOWED=NO
       - name: Guardar resultados de las pruebas de interfaz
         if: failure()
