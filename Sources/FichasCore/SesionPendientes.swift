@@ -26,11 +26,6 @@ public struct SeleccionSesion: Equatable, Sendable {
     }
 }
 
-public enum ErrorSesion: Error, Equatable {
-    /// Marca de TDD: la función todavía no está implementada.
-    case noImplementado
-}
-
 /// Arma la sesión de pendientes del día.
 ///
 /// - Parameters:
@@ -41,7 +36,12 @@ public func seleccionarPendientes(
     hoy: String,
     fichas: [FichaProgramada],
     limiteNuevas: Int
-) throws -> SeleccionSesion {
-    // TDD: las pruebas de sesion-pendientes.json fallan hasta que esto se implemente.
-    throw ErrorSesion.noImplementado
+) -> SeleccionSesion {
+    // AAAA-MM-DD ordena igual como texto que como fecha.
+    let repasos = fichas.filter { ficha in
+        guard let proximo = ficha.proximoRepaso else { return false }
+        return proximo <= hoy
+    }.map(\.id)
+    let nuevas = fichas.filter { $0.proximoRepaso == nil }.count
+    return SeleccionSesion(repasos: repasos, cantidadNuevas: min(nuevas, limiteNuevas))
 }
