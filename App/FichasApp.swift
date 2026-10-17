@@ -21,6 +21,19 @@ struct FichasApp: App {
         if ProcessInfo.processInfo.arguments.contains("-datos-ejemplo") {
             try? DatosDeEjemplo.cargar(en: contenedor.mainContext, hoy: .now)
         }
+        // Para cargar un mazo propio: `-importar-mazo Documents/mazo.json` (ruta relativa a la carpeta de la app).
+        let argumentos = ProcessInfo.processInfo.arguments
+        if let i = argumentos.firstIndex(of: "-importar-mazo"), argumentos.indices.contains(i + 1) {
+            let ruta = argumentos[i + 1]
+            let url = ruta.hasPrefix("/") ? URL(fileURLWithPath: ruta)
+                : URL(fileURLWithPath: NSHomeDirectory()).appendingPathComponent(ruta)
+            do {
+                let resultado = try ImportadorMazo.importar(Data(contentsOf: url), en: contenedor.mainContext)
+                print("Mazo importado: \(resultado)")
+            } catch {
+                print("No se pudo importar \(url.path): \(error)")
+            }
+        }
         #endif
     }
 
