@@ -58,8 +58,13 @@ final class FlujoEstudioUITests: XCTestCase {
         volver(a: "Historia")
         volver(a: "Categorías")
 
-        fila("Historia").swipeLeft()
-        app.buttons["Eliminar"].tap()
+        // A veces el primer deslizamiento no abre la fila (la pantalla sigue animando al volver).
+        let eliminar = app.buttons["Eliminar"]
+        for _ in 1...2 where !eliminar.exists {
+            fila("Historia").swipeLeft()
+            _ = eliminar.waitForExistence(timeout: 2)
+        }
+        eliminar.tap()
 
         esperar(app.alerts["No se puede eliminar"])
         app.alerts.buttons["Entendido"].tap()
@@ -82,10 +87,8 @@ final class FlujoEstudioUITests: XCTestCase {
         app.buttons["Nueva ficha"].tap()
         let campoPregunta = app.textFields["Pregunta"]
         esperar(campoPregunta)
-        campoPregunta.tap()
-        campoPregunta.typeText(pregunta)
-        app.textFields["Respuesta"].tap()
-        app.textFields["Respuesta"].typeText(respuesta)
+        escribir(pregunta, en: campoPregunta)
+        escribir(respuesta, en: app.textFields["Respuesta"])
         app.buttons["Guardar"].tap()
         esperar(conTexto(pregunta))
     }
@@ -94,6 +97,19 @@ final class FlujoEstudioUITests: XCTestCase {
         let elemento = fila(nombre)
         esperar(elemento)
         elemento.tap()
+    }
+
+    /// Escribe y comprueba que el campo quedó con el texto completo: el teclado en pantalla
+    /// puede perder caracteres, y así el error dice cuál en lugar de fallar más adelante.
+    private func escribir(_ texto: String, en campo: XCUIElement, file: StaticString = #filePath, line: UInt = #line) {
+        campo.tap()
+        campo.typeText(texto)
+        // Se busca de nuevo por el valor: `campo` se encontraba por el texto de ejemplo, que ya no está.
+        let escrito = app.textFields.matching(NSPredicate(format: "value == %@", texto)).firstMatch
+        if !escrito.exists {
+            let valores = app.textFields.allElementsBoundByIndex.map { $0.value as? String ?? "" }
+            XCTFail("El campo no quedó con \"\(texto)\". Campos: \(valores)", file: file, line: line)
+        }
     }
 
     /// Un botón por su texto. Las filas con `LabeledContent` juntan etiqueta y valor ("Ciencias, 0").

@@ -58,8 +58,11 @@ jobs:
             -retry-tests-on-failure -test-iterations 2 \
             -resultBundlePath PruebasUI.xcresult CODE_SIGNING_ALLOWED=NO
       - name: Guardar resultados de las pruebas de interfaz
-        if: failure()
+        # También cuando pasan: el reintento puede ocultar un primer intento fallido.
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: PruebasUI.xcresult
           path: PruebasUI.xcresult
+          retention-days: 7
+          if-no-files-found: ignore
