@@ -13,14 +13,23 @@ struct InicioView: View {
                     .foregroundStyle(.secondary)
                 Text("0")
                     .font(.system(size: 72, weight: .bold, design: .rounded))
+                // La sesión de pendientes necesita FSRS (issue #1); por ahora está desactivada.
                 Button("Empezar") {}
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
                     .disabled(true)
+                NavigationLink("Elegir qué estudiar") {
+                    NuevaSesionView()
+                }
             }
             .padding()
             .navigationTitle("Fichas")
             .toolbar {
+                NavigationLink {
+                    HistorialView()
+                } label: {
+                    Label("Historial", systemImage: "clock")
+                }
                 NavigationLink {
                     CategoriasView()
                 } label: {
