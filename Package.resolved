@@ -1,0 +1,14 @@
+{
+  "originHash" : "ba8fc400ce7f304302b09cc5e8f035fc2cab40e511539fd65e494ad463c25db7",
+  "pins" : [
+    {
+      "identity" : "swift-fsrs",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/serandmoncas/swift-fsrs.git",
+      "state" : {
+        "revision" : "c210b075d6650ab61482301e8d149afbe4206ede"
+      }
+    }
+  ],
+  "version" : 3
+}
