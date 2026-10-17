@@ -18,6 +18,9 @@ targets:
       - App
     dependencies:
       - package: FichasCore
+        product: FichasCore
+      - package: FichasCore
+        product: FichasDatos
     info:
       path: App/Info.plist
       properties:
