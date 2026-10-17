@@ -6,6 +6,11 @@ public enum Almacen {
     /// Todos los modelos que guarda la app.
     public static let esquema = Schema([Categoria.self, Subcategoria.self, Ficha.self, Sesion.self, Respuesta.self])
 
+    /// Contenedor de la app, guardado en el dispositivo.
+    public static func contenedor() throws -> ModelContainer {
+        try ModelContainer(for: esquema)
+    }
+
     /// Contenedor que vive solo en memoria, para pruebas y vistas previas.
     public static func contenedorEnMemoria() throws -> ModelContainer {
         try ModelContainer(for: esquema, configurations: ModelConfiguration(isStoredInMemoryOnly: true))

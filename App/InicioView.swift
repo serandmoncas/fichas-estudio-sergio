@@ -1,5 +1,6 @@
-import SwiftUI
 import FichasCore
+import FichasDatos
+import SwiftUI
 
 /// Pantalla de inicio: cuántas fichas tocan hoy y un botón para empezar.
 /// Por ahora es un marcador de posición; la lógica vive en FichasCore.
@@ -19,10 +20,18 @@ struct InicioView: View {
             }
             .padding()
             .navigationTitle("Fichas")
+            .toolbar {
+                NavigationLink {
+                    CategoriasView()
+                } label: {
+                    Label("Categorías", systemImage: "folder")
+                }
+            }
         }
     }
 }
 
 #Preview {
     InicioView()
+        .modelContainer(try! Almacen.contenedorEnMemoria())
 }
