@@ -9,6 +9,7 @@ struct CategoriasView: View {
 
     @State private var editando: EdicionNombre<Categoria>?
     @State private var bloqueada: Categoria?
+    @State private var importando = false
 
     var body: some View {
         List {
@@ -37,6 +38,9 @@ struct CategoriasView: View {
         .navigationTitle("Categorías")
         .toolbar {
             Button("Nueva categoría", systemImage: "plus") { editando = .nueva }
+            #if DEBUG
+            Button("Importar mazo", systemImage: "square.and.arrow.down") { importando = true }
+            #endif
         }
         .pedirNombre($editando, titulo: "Categoría") { edicion, nombre in
             switch edicion {
@@ -44,6 +48,9 @@ struct CategoriasView: View {
             case .renombrar(let categoria): categoria.nombre = nombre
             }
         }
+        #if DEBUG
+        .importarMazo(eligiendo: $importando)
+        #endif
         .alert("No se puede eliminar", isPresented: Binding(get: { bloqueada != nil }, set: { if !$0 { bloqueada = nil } }),
                presenting: bloqueada) { _ in
             Button("Entendido", role: .cancel) {}
