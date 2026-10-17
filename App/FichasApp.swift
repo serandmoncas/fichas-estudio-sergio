@@ -8,7 +8,10 @@ struct FichasApp: App {
 
     init() {
         do {
-            contenedor = try Almacen.contenedor()
+            // Las pruebas de interfaz arrancan con datos vacíos en memoria, sin tocar los guardados.
+            contenedor = ProcessInfo.processInfo.arguments.contains("-pruebas-ui")
+                ? try Almacen.contenedorEnMemoria()
+                : try Almacen.contenedor()
         } catch {
             // Sin almacenamiento la app no puede funcionar; mejor fallar al abrir que perder datos después.
             fatalError("No se pudo abrir el almacenamiento: \(error)")

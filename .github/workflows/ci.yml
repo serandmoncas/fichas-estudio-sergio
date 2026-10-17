@@ -40,3 +40,8 @@ jobs:
         run: xcodebuild -project Fichas.xcodeproj -scheme Fichas -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build
       - name: Compilar para iOS
         run: xcodebuild -project Fichas.xcodeproj -scheme Fichas -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+      - name: Pruebas de interfaz en el simulador de iOS
+        run: |
+          # El primer iPhone disponible, para no depender de un nombre fijo de simulador.
+          SIMULADOR=$(xcrun simctl list devices available -j | python3 -c "import json,sys; d=json.load(sys.stdin)['devices']; print(next(x['udid'] for k,v in d.items() if 'iOS' in k for x in v if x['name'].startswith('iPhone')))")
+          xcodebuild test -project Fichas.xcodeproj -scheme Fichas -destination "id=$SIMULADOR" CODE_SIGNING_ALLOWED=NO

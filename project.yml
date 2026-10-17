@@ -41,3 +41,18 @@ targets:
         TARGETED_DEVICE_FAMILY: "1,2"
         ENABLE_APP_SANDBOX: YES
         GENERATE_INFOPLIST_FILE: NO
+    scheme:
+      testTargets:
+        - FichasUITests
+  FichasUITests:
+    type: bundle.ui-testing
+    supportedDestinations: [iOS]
+    sources:
+      - UITests
+    dependencies:
+      - target: Fichas
+    settings:
+      base:
+        SWIFT_VERSION: "5.10"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: Fichas
