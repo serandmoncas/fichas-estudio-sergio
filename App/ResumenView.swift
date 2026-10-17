@@ -3,9 +3,12 @@ import FichasDatos
 import SwiftData
 import SwiftUI
 
-/// Resultado al terminar una sesión (REQ-030). Qué se muestra es la pregunta abierta 16.
+/// Resultado de una sesión (REQ-030), al terminarla o desde el historial.
+/// Qué se muestra es la pregunta abierta 16.
 struct ResumenView: View {
     let sesion: Sesion
+    /// `true` justo al terminar la sesión; `false` cuando se abre desde el historial.
+    var recienTerminada = false
 
     private var respuestas: [Respuesta] { sesion.respuestas.sorted { $0.mostradaEn < $1.mostradaEn } }
 
@@ -22,9 +25,16 @@ struct ResumenView: View {
         List {
             Section {
                 VStack(spacing: 8) {
-                    Image(systemName: "checkmark.circle.fill").font(.system(size: 48)).foregroundStyle(.green)
-                    Text("Terminaste por hoy").font(.title2.bold())
-                    Text("\(resumen.total) fichas").foregroundStyle(.secondary)
+                    if recienTerminada {
+                        Image(systemName: "checkmark.circle.fill").font(.system(size: 48)).foregroundStyle(.green)
+                        Text("Terminaste por hoy").font(.title2.bold())
+                    } else {
+                        Text(sesion.inicio.formatted(date: .complete, time: .shortened)).font(.headline)
+                        if sesion.enCurso {
+                            Label("Sin terminar", systemImage: "pause.circle").foregroundStyle(.orange)
+                        }
+                    }
+                    Text("\(resumen.total) de \(sesion.fichasSolicitadas) fichas").foregroundStyle(.secondary)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical)
