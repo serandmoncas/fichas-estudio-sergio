@@ -42,6 +42,10 @@ public func seleccionarPendientes(
     fichas: [FichaProgramada],
     limiteNuevas: Int
 ) throws -> SeleccionSesion {
-    // TDD: las pruebas de sesion-pendientes.json fallan hasta que esto se implemente.
-    throw ErrorSesion.noImplementado
+    let repasos = fichas.compactMap { f -> String? in
+        guard let p = f.proximoRepaso, p <= hoy else { return nil }
+        return f.id
+    }
+    let nuevas = fichas.filter { $0.proximoRepaso == nil }.count
+    return SeleccionSesion(repasos: repasos, cantidadNuevas: min(nuevas, limiteNuevas))
 }

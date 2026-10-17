@@ -41,6 +41,19 @@ public func traducirCalificacion(
     calificacion: CalificacionOriginal,
     tiempoAgotado: Bool
 ) throws -> CalificacionFSRS {
-    // TDD: las pruebas de calificacion.json fallan hasta que esto se implemente.
-    throw ErrorCalificacion.noImplementado
+    let traducida: CalificacionFSRS
+    switch (tipo, calificacion) {
+    case (.escala1a5, .escala(let n)):
+        switch n {
+        case 1: traducida = .otraVez
+        case 2: traducida = .dificil
+        case 3, 4: traducida = .bien
+        case 5: traducida = .facil
+        default: throw ErrorCalificacion.calificacionInvalida
+        }
+    case (.pasaNoPasa, .pasa): traducida = .bien
+    case (.pasaNoPasa, .noPasa): traducida = .otraVez
+    default: throw ErrorCalificacion.calificacionInvalida
+    }
+    return tiempoAgotado ? .otraVez : traducida
 }
